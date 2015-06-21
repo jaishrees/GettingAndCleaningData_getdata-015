@@ -90,5 +90,3 @@ TblLabelledDataSet %>%
   summarise_each(funs(mean))%>%
   write.table("./tidy.txt",row.names=FALSE)
 ```
----
-
