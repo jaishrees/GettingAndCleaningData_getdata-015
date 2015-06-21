@@ -42,7 +42,7 @@ names(subjectComb) <- "Subject"
 names(activityComb) <- "Activity"
 ```
 - Label the featuresComb data set with descriptive variable names from features.txt
-- ```Javascript
+```Javascript
 featuresLbl <- read.table("features.txt")
 names(featuresComb) <- featuresLbl$V2
 ```
@@ -51,7 +51,7 @@ names(featuresComb) <- featuresLbl$V2
 SubActFeatCombined <- cbind(subjectComb, activityComb, featuresComb)
 ```
 - Use regular expressions grep to mark for retention only columns with "mean" and "std" and 'Subject", "Activity"
-- ```Javascript
+```Javascript
 meanSTDcols <-  grepl("mean", colnames(SubActFeatCombined)) | 
                 grepl("std\\(\\)", colnames(SubActFeatCombined)) |
                 grepl("Subject", colnames(SubActFeatCombined)) |
