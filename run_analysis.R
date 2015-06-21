@@ -21,7 +21,7 @@ library(dplyr)
   activityTrain <- read.table("train//y_train.txt", header = FALSE)
 # dim(activityTrain) #7352 1
 # names(activityTrain)#"V1"
-# activityTrain
+# head(activityTrain)
 
   featuresTrain <- read.table("train//X_train.txt", header = FALSE)
 # dim(featuresTrain)#7352 561
@@ -47,14 +47,14 @@ library(dplyr)
 subjectComb <- rbind(subjectTrain,subjectTest)
 activityComb <- rbind(activityTrain,activityTest)
 featuresComb <- rbind(featuresTrain,featuresTest)
-
+#dim(featuresComb)
 
 #Assign subject data label
 names(subjectComb) <- "Subject"
 
 #Assign subject data label
 names(activityComb) <- "Activity"
-head(activityComb)
+#head(activityComb)
 
 #Assign features attributes data labels
 featuresLbl <- read.table("features.txt")
@@ -64,6 +64,7 @@ names(featuresComb) <- featuresLbl$V2 #4: Appropriately labels the data set with
 
 # Now Combine the Subject, Activity, Features data
 SubActFeatCombined <- cbind(subjectComb, activityComb, featuresComb)
+#dim(SubActFeatCombined)
 
 #Make this a Table
 #SubActFeatCombinedTbl <- tbl_df(SubActFeatCombined)
@@ -74,15 +75,16 @@ SubActFeatCombined <- cbind(subjectComb, activityComb, featuresComb)
 #2: Extracts only the measurements on the mean and standard deviation for each measurement. 
 #########################################################################################
 # Use regular expressions grep to mark for retention only columns with "mean" and "std" and 'Subject", "Activity"
-meanSTDcols <-  grepl("mean\\(\\)", colnames(SubActFeatCombined)) | 
+meanSTDcols <-  grepl("mean", colnames(SubActFeatCombined)) | 
                 grepl("std\\(\\)", colnames(SubActFeatCombined)) |
                 grepl("Subject", colnames(SubActFeatCombined)) |
                 grepl("Activity", colnames(SubActFeatCombined)) 
-  
+
 
 # retain necessary columns
-SubActFeatCombined <- SubActFeatCombined[, meanSTDcols]
-
+SubActFeatMeanSTD <- SubActFeatCombined[, meanSTDcols]
+#colnames(SubActFeatMeanSTD)
+#dim(SubActFeatMeanSTD)
 
 
 #########################################################################################
@@ -90,27 +92,28 @@ SubActFeatCombined <- SubActFeatCombined[, meanSTDcols]
 #########################################################################################
 # convert the activity column from integer to factor
 activityLabels <- read.table("activity_labels.txt", header = FALSE)[,2]
+dim(activityLabels)
 
 # use factor function to map the activity code to the label in activity_labels.txt
-SubActFeatCombined$Activity <- factor(SubActFeatCombined$Activity, labels=activityLabels)
+SubActFeatMeanSTD$Activity <- factor(SubActFeatMeanSTD$Activity, labels=activityLabels)
                                          
 #########################################################################################
 #4: Appropriately labels the data set with descriptive variable names. 
 #########################################################################################
 #This step done above
-LabelledDataSet <- SubActFeatCombined
+LabelledDataSet <- SubActFeatMeanSTD
 
 #Now tranform the abbreviated column naames
 names(LabelledDataSet) <- names(LabelledDataSet) %>%
   sub("^t", "time", .) %>%            
   sub("^f", "frequency", .) %>%
   gsub("([^\\-])([A-Z])", "\\1\\_\\L\\2\\E", ., perl=TRUE) %>%
-  gsub("body_body", "body", .) %>%
+  gsub("bodybody", "body", .) %>%
   gsub("acc", "accelerometer", .) %>%  
   gsub("gyro", "gyroscope", .) %>%
   gsub("mag", "magnitude", .) %>%
   gsub("std\\(\\)", "standard_deviation", .) %>%
-  gsub("mean\\(\\)", "mean", .) %>%
+  gsub("mean", "mean", .) %>%
   gsub("-", "_", .)
 
 
