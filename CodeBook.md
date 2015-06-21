@@ -52,7 +52,7 @@ names(featuresComb) <- featuresLbl$V2
 SubActFeatCombined <- cbind(subjectComb, activityComb, featuresComb)
 ```
 - Use regular expressions grep to mark for retention only columns with "mean" and "std" and 'Subject", "Activity"
-- ```R
+- ```Javascript
 meanSTDcols <-  grepl("mean", colnames(SubActFeatCombined)) | 
                 grepl("std\\(\\)", colnames(SubActFeatCombined)) |
                 grepl("Subject", colnames(SubActFeatCombined)) |
@@ -90,3 +90,5 @@ TblLabelledDataSet %>%
   summarise_each(funs(mean))%>%
   write.table("./tidy.txt",row.names=FALSE)
 ```
+---
+
