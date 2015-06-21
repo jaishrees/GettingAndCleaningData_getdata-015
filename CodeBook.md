@@ -37,7 +37,6 @@ featuresComb <- rbind(featuresTrain,featuresTest)
 ```
 
 - Assign labels to ActivityComb and SubjectComb
-- 
 ```Javascript
 names(subjectComb) <- "Subject"
 names(activityComb) <- "Activity"
